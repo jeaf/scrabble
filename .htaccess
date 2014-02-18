@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteBase /scrabble/
+RewriteRule ^([a-z]+)$ cgi-bin/api.py?q=$1
+
