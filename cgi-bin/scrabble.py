@@ -19,7 +19,7 @@ def lookup(letters, lang='fr'):
 
     # The name of the table in the database that corresponds to the choosen
     # language
-    table_name = 'idx_{}'.format(lang)
+    table_name = 'idx_{0}'.format(lang)
 
     # Check if the database has already been created
     if not os.path.isfile(db_path):
@@ -29,7 +29,7 @@ def lookup(letters, lang='fr'):
 
         # Create DB
         db = sqlite3.connect(db_path)
-        db.execute('''CREATE TABLE {}(
+        db.execute('''CREATE TABLE {0}(
                       id      INTEGER PRIMARY KEY,
                       letters TEXT NOT NULL,
                       word    TEXT NOT NULL);'''.format(table_name))
@@ -49,7 +49,7 @@ def lookup(letters, lang='fr'):
 
                     # This loop is only for debugging purposes
                     for c in word:
-                        assert ord(c) >= ord('a') and ord(c) <= ord('z'), '{} ({}) {} {}'.format(ord(c), c, word, i)
+                        assert ord(c) >= ord('a') and ord(c) <= ord('z'), '{0} ({1}) {2} {3}'.format(ord(c), c, word, i)
 
                     # Sort letters in word, and add to dict
                     sorted_word = ''.join(sorted(word))
@@ -59,10 +59,10 @@ def lookup(letters, lang='fr'):
         tuples = []
         for let, words in d.iteritems():
             tuples.extend((let, w) for w in words)
-        db.executemany("INSERT INTO {}(letters, word) VALUES(?, ?)".format(table_name), tuples)
+        db.executemany("INSERT INTO {0}(letters, word) VALUES(?, ?)".format(table_name), tuples)
 
         # Create the database index
-        db.execute('CREATE INDEX letters_index ON {}(letters);'.format(table_name))
+        db.execute('CREATE INDEX letters_index ON {0}(letters);'.format(table_name))
     else:
         db = sqlite3.connect(db_path)
 
@@ -73,7 +73,7 @@ def lookup(letters, lang='fr'):
     answers = set()
     for i in range(1, len(letters) + 1):
         for w in (''.join(c) for c in itertools.combinations(letters, i)):
-            answers.update(w for (w,) in db.execute('SELECT word FROM {} WHERE letters=?'.format(table_name), (w,)))
+            answers.update(w for (w,) in db.execute('SELECT word FROM {0} WHERE letters=?'.format(table_name), (w,)))
 
     # Return a list of words sorted by length (largest first), then alpha)
     words = []
